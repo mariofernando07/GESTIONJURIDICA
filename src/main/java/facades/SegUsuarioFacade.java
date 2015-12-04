@@ -50,6 +50,16 @@ public class SegUsuarioFacade extends AbstractFacade<SegUsuario> {
         }
 
     }
+
+    public List<SegUsuario> buscarUsuarios() {
+        try {
+            Query query = em.createQuery("SELECT a FROM SegUsuario a");
+            return query.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+
+    }    
     
     public SegUsuario buscarUsuario(String usuario, String pasword) {
         try {

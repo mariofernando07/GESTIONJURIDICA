@@ -5,10 +5,13 @@
  */
 package facades;
 
+import entities.OpeDemanda;
 import entities.OpeEtapaDemanda;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -26,6 +29,16 @@ public class OpeEtapaDemandaFacade extends AbstractFacade<OpeEtapaDemanda> {
 
     public OpeEtapaDemandaFacade() {
         super(OpeEtapaDemanda.class);
+    }
+    
+    public List<OpeEtapaDemanda> buscarPorDemanda(OpeDemanda demanda){
+        try {
+            Query query = em.createQuery("SELECT e FROM OpeEtapaDemanda e WHERE e.idDemanda = ?1");
+            query.setParameter(1, demanda);
+            return query.getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

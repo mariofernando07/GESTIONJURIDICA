@@ -35,7 +35,6 @@
                             <f:convertDateTime pattern="dd/MM/yyyy"/>
                         </h:outputLabel>
                     </p:column>
-                    <p:column headerText="No Clientes">0</p:column>
                 </p:dataTable>
 
             </p:panel>            
@@ -113,6 +112,19 @@
                 </p:panelGrid>
             </p:panel>
             <br/>
+            <p:panel header="Detalle Demanda">
+                <p:commandButton class="marginBottom" value="Adicionar Detalle" actionListener="#{opeDemandaMB.cargarModalDetalle}"/>
+                <p:dataTable id="IdTablaDetalleDemanda" emptyMessage="No se encontro detalles a la demanda" value="#{opeDemandaMB.listaOpeEtapaDemanda}" var="opeEtapaDemanda">
+                    <p:column headerText="Fecha">
+                        <h:outputLabel value="#{opeEtapaDemanda.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Etapa">#{opeEtapaDemanda.cfgEtapaDemanda.nomEtapa}</p:column>
+                    <p:column headerText="Descripcion">#{opeEtapaDemanda.descripcionEtapa}</p:column>
+                </p:dataTable>
+            </p:panel>
+            <br/>
             <p:panel id="IdPanelSoporte" header="Soportes del Proceso">
                 <p:dataTable emptyMessage="El Proceso asociado a la demanda no tiene documentos de soporte" value="#{opeDemandaMB.listaOpeProcesoSoporte}" var="OpeSoporte" rowKey="#{OpeSoporte.opeProcesoSoportePK}" selectionMode="single" selection="#{opeDemandaMB.opeProcesoSoporteSeleccionado}">
                     <p:ajax  event="rowSelect" listener="#{opeDemandaMB.crearDownloadSoporte}" update="@none"/>
@@ -145,5 +157,38 @@
             </h:form>
         </p:dialog>        
 
+        <p:dialog widgetVar="dlgDetalleDemanda" modal="true" header="Detalle Demanda" resizable="false" width="50%">
+            <h:form id="IdFormModalDetalleDemanda">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">Etapa Demanda</p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeDemandaMB.idEtapaDemanda}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeDemandaMB.listaEtapaDemanda}" var="etapaDemanda" itemLabel="#{etapaDemanda.nomEtapa}" itemValue="#{etapaDemanda.cfgEtapaDemandaPK.idEtapaDemanda}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            Fecha
+                        </p:column>
+                        <p:column>
+                            <p:calendar value="#{opeDemandaMB.fechaDetalle}" navigator="true" locale="es" maxlength="10" timeZone="America/Bogota" pattern="dd/MM/yyyy" mask="99/99/9999"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            Descripcion
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea value="#{opeDemandaMB.descripcionDetalle}" />
+                        </p:column>
+                    </p:row>                    
+                </p:panelGrid>
+                <p:separator/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{opeDemandaMB.crearDetalleDemanda}"/>
+            </h:form>
+        </p:dialog>           
     </ui:define>
 </ui:composition>

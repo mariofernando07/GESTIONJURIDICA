@@ -17,20 +17,24 @@
         </style>
         <p:toolbar style="margin: 0px">
             <f:facet name="left">
-
-                <h:outputLabel class="titulo_principal">Gestión Juridica</h:outputLabel>
-
-                <span class="ui-separator">
-                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
-                </span>
-                <!--p:outputLabel># {sesionMB.empresaActual.nomEmpresa} - # {sesionMB.sedeActual.nomSede}</p:outputLabel--> 
-                <span class="ui-separator">
-                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
-                </span>                    
-                <!--p:outputLabel># {sesionMB.usuarioActual.nombreCompleto()}</p:outputLabel-->    
+                <h:outputLabel class="titulo_principal">Gestión Juridica</h:outputLabel>   
             </f:facet>
 
             <f:facet name="right">
+                <!--span class="ui-separtator">
+                    Bienvenido(a)                    
+                </span-->
+                <span class="ui-separator">
+                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                </span>
+                <span class="ui-separator">
+                    <span class="ui-icon ui-icon-person" />
+                </span>
+                    &nbsp;
+                <h:outputLabel value="#{sesionMB.usuarioActual.usuario}"/>
+                <span class="ui-separator">
+                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                </span>       
                 <p:commandButton  title="Salir" icon="ui-icon-power"  actionListener="#{sesionMB.cerrarSesion}"/>
             </f:facet>
 

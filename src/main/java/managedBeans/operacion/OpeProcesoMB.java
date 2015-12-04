@@ -134,7 +134,7 @@ public class OpeProcesoMB implements Serializable {
     }
 
     public void asociarClientesAListaProceso() {
-        if (opeProcesoSeleccionado != null && !buscarClienteEnLista()) {
+        if (opeProcesoSeleccionado != null && clienteSeleccionado != null) {
             Opeclienteproceso opeClienteProceso = new Opeclienteproceso(clienteSeleccionado.getIdCliente(), opeProcesoSeleccionado.getIdProceso());
 //            opeClienteProceso.setOpeCliente(clienteSeleccionado);
 //            opeClienteProceso.setOpeProceso(opeProcesoSeleccionado);
@@ -151,7 +151,7 @@ public class OpeProcesoMB implements Serializable {
         if (opeCliente != null) {
             if (opeProcesoSeleccionado != null) {
                 try {
-                    Opeclienteproceso opeClienteProceso = opeClienteProcesoFacade.buscarClientePorProceso(opeCliente.getIdCliente(), opeProcesoSeleccionado.getIdProceso());
+                    Opeclienteproceso opeClienteProceso = opeClienteProcesoFacade.buscarPorClienteAndProceso(opeCliente.getIdCliente(), opeProcesoSeleccionado.getIdProceso());
                     opeClienteProcesoFacade.remove(opeClienteProceso);
                     List<Integer> identificadoresClientes = opeClienteProcesoFacade.buscarClientesPorProceso(opeProcesoSeleccionado.getIdProceso());
                     listaClienteProceso = clienteFacade.buscarClientesPorIdentificadores(identificadoresClientes);

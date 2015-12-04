@@ -52,9 +52,9 @@ public class OpeclienteprocesoFacade extends AbstractFacade<Opeclienteproceso> {
         }   
     }
     
-    public Opeclienteproceso buscarClientePorProceso(int cliente, long proceso){
+    public Opeclienteproceso buscarPorClienteAndProceso(int cliente, long proceso){
         try {
-            Query query = em.createQuery("SELECT o FROM Opeclienteproceso o WHERE o.opeclienteprocesoPK.idProceso = ?1");
+            Query query = em.createQuery("SELECT o FROM Opeclienteproceso o WHERE o.opeclienteprocesoPK.idCliente = ?1 AND o.opeclienteprocesoPK.idProceso = ?2");
             query.setParameter(1, cliente);
             query.setParameter(2, proceso);
             return (Opeclienteproceso) query.getSingleResult();

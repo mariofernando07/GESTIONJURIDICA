@@ -5,7 +5,6 @@
  */
 package managedBeans.configuracion;
 
-import entities.CfgTipoIdent;
 import entities.SegUsuario;
 import facades.CfgTipoIdentFacade;
 import facades.SegUsuarioFacade;

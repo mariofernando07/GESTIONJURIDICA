@@ -5,18 +5,22 @@
  */
 package managedBeans.operacion;
 
+import entities.CfgEtapaDemanda;
 import entities.CfgJuzgado;
 import entities.CfgTipoDemanda;
 import entities.OpeCliente;
 import entities.OpeDemanda;
+import entities.OpeEtapaDemanda;
 import entities.OpeProceso;
 import entities.OpeProcesoSoporte;
 import entities.SegUsuario;
+import facades.CfgEtapaDemandaFacade;
 import facades.CfgJuzgadoFacade;
 import facades.CfgTipoDemandaFacade;
 import facades.OpeClienteFacade;
 import facades.OpeclienteprocesoFacade;
 import facades.OpeDemandaFacade;
+import facades.OpeEtapaDemandaFacade;
 import facades.OpeProcesoFacade;
 import facades.OpeProcesoSoporteFacade;
 import facades.SegUsuarioFacade;
@@ -66,10 +70,17 @@ public class OpeDemandaMB implements Serializable {
     private int idAbogado;
     private int idJuzgado;
     private String juez;
+    
+    //DETALLE DE LA DEMANDA
+    private int idEtapaDemanda;
+    private Date fechaDetalle;
+    private String descripcionDetalle;
 
     private StreamedContent fileDownload;
 
     private List<OpeProcesoSoporte> listaOpeProcesoSoporte;
+    private List<CfgEtapaDemanda> listaEtapaDemanda;
+    private List<OpeEtapaDemanda> listaOpeEtapaDemanda;
     private OpeProcesoSoporte opeProcesoSoporteSeleccionado;
 
     @EJB
@@ -88,6 +99,10 @@ public class OpeDemandaMB implements Serializable {
     OpeDemandaFacade opeDemandaFacade;
     @EJB
     OpeProcesoSoporteFacade opeProcesoSoporteFacade;
+    @EJB
+    CfgEtapaDemandaFacade cfgEtapaDemandaFacade;
+    @EJB
+    OpeEtapaDemandaFacade opeEtapaDemandaFacade;
 
     public OpeDemandaMB() {
 
@@ -133,10 +148,12 @@ public class OpeDemandaMB implements Serializable {
         nombreCompletoCliente = null;
         listaProceso = null;
         listaOpeProcesoSoporte = null;
+        listaOpeEtapaDemanda = null;
         limpiarPanelGestionDemanda();
         RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdPanelCliente");
         RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdTablaProcesos");
         RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdPanelDemanda");
+        RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdTablaDetalleDemanda");
         RequestContext.getCurrentInstance().execute("PF('dlgSeleccionarCliente').hide()");
 
     }
@@ -182,6 +199,7 @@ public class OpeDemandaMB implements Serializable {
             idAbogado = opeDemandaSeleccionada.getIdUsuario().getIdUsuario();
             idJuzgado = opeDemandaSeleccionada.getIdJuzgado().getIdJuzgado();
             juez = opeDemandaSeleccionada.getJuez();
+            listaOpeEtapaDemanda = opeEtapaDemandaFacade.buscarPorDemanda(opeDemandaSeleccionada);
             URL = "opeDemanda?faces-redirect=true";
         } else {
             if (opeProcesoSeleccionado != null) {
@@ -191,8 +209,45 @@ public class OpeDemandaMB implements Serializable {
         if (!ban) {
             RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdPanelDemanda");
             RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdPanelSoporte");
+            RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdTablaDetalleDemanda");
         }
         return URL;
+    }
+
+    public void cargarModalDetalle() {
+        if (opeDemandaSeleccionada != null) {
+            listaEtapaDemanda = cfgEtapaDemandaFacade.buscarPorTipoDemanda(opeDemandaSeleccionada.getIdTipoDemanda().getIdTipoDemanda());
+            limpiarFormularioDetalle();
+            fechaDetalle = new Date();
+            RequestContext.getCurrentInstance().update("IdFormModalDetalleDemanda");
+            RequestContext.getCurrentInstance().execute("PF('dlgDetalleDemanda').show()");
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Falta Seleccionar la demanda"));
+        }
+    }
+    
+    private void limpiarFormularioDetalle(){
+        idEtapaDemanda = 0;
+        descripcionDetalle = null;
+    }
+    
+    public void crearDetalleDemanda(){
+        try {
+            OpeEtapaDemanda opeEtapaDemanda = new OpeEtapaDemanda();
+            opeEtapaDemanda.setIdDemanda(opeDemandaSeleccionada);
+            opeEtapaDemanda.setFecha(fechaDetalle);
+            CfgEtapaDemanda cfgEtapaDemanda = cfgEtapaDemandaFacade.buscarPorTipoDemandaAndEtapaDemanda(opeDemandaSeleccionada.getIdTipoDemanda().getIdTipoDemanda(), idEtapaDemanda);
+            opeEtapaDemanda.setCfgEtapaDemanda(cfgEtapaDemanda);
+            opeEtapaDemanda.setIdCfgEtapaDemanda(idEtapaDemanda);
+            opeEtapaDemanda.setDescripcionEtapa(descripcionDetalle);
+            opeEtapaDemandaFacade.create(opeEtapaDemanda);
+            listaOpeEtapaDemanda = opeEtapaDemandaFacade.buscarPorDemanda(opeDemandaSeleccionada);
+            RequestContext.getCurrentInstance().execute("PF('dlgDetalleDemanda').hide()");
+            RequestContext.getCurrentInstance().update("IdFormGestionDemanda:IdTablaDetalleDemanda");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro Guardado"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Registro no Guardado"));
+        }
     }
 
     public void crearDownloadSoporte() throws FileNotFoundException, MagicParseException, MagicMatchNotFoundException, MagicException {
@@ -383,6 +438,38 @@ public class OpeDemandaMB implements Serializable {
 
     public void setFileDownload(StreamedContent fileDownload) {
         this.fileDownload = fileDownload;
+    }
+
+    public List<CfgEtapaDemanda> getListaEtapaDemanda() {
+        return listaEtapaDemanda;
+    }
+
+    public int getIdEtapaDemanda() {
+        return idEtapaDemanda;
+    }
+
+    public void setIdEtapaDemanda(int idEtapaDemanda) {
+        this.idEtapaDemanda = idEtapaDemanda;
+    }
+
+    public Date getFechaDetalle() {
+        return fechaDetalle;
+    }
+
+    public void setFechaDetalle(Date fechaDetalle) {
+        this.fechaDetalle = fechaDetalle;
+    }
+
+    public String getDescripcionDetalle() {
+        return descripcionDetalle;
+    }
+
+    public void setDescripcionDetalle(String descripcionDetalle) {
+        this.descripcionDetalle = descripcionDetalle;
+    }
+
+    public List<OpeEtapaDemanda> getListaOpeEtapaDemanda() {
+        return listaOpeEtapaDemanda;
     }
 
 }

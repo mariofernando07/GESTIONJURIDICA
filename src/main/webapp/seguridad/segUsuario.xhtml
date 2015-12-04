@@ -7,10 +7,11 @@
                 template="../templates/layout.xhtml">
     <ui:define name="title">Gestión de Usuarios</ui:define>
     <ui:define name="content">
+        <p:growl autoUpdate="true" showDetail="true"/>
         <h:form id="IdFormGestionUsuarios">
             <p:panel>
-                <p:commandButton icon="ui-icon-search" value="Seleccinar Usuario" onclick="PF('dlgSeleccinarSocializacion').show()"/>
-                <p:commandButton icon="ui-icon-disk" value="Guardar" onclick="PF('dlgSeleccinarSocializacion').show()"/>
+                <p:commandButton icon="ui-icon-search" value="Seleccinar Usuario" actionListener="#{segUsuarioMB.cargarUsuarios}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{segUsuarioMB.accion}"/>
                 <!--p:commandButton icon="ui-icon-trash" value="Eliminar" onclick="PF('dlgSeleccinarSocializacion').show()"/-->
             </p:panel>
             <br/>
@@ -21,7 +22,10 @@
                             <p:outputLabel value="Tipo Documento" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:selectOneMenu/>      
+                            <p:selectOneMenu value="#{segUsuarioMB.idTipoDocumento}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaIdentificacion}" var="identificacion" itemLabel="#{identificacion.nomDocumento}" itemValue="#{identificacion.idIdentificacion}"/> 
+                            </p:selectOneMenu>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -29,7 +33,7 @@
                             <p:outputLabel value="No Documento" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  maxlength="20"/>
+                            <p:inputText  value="#{segUsuarioMB.numDocumento}" maxlength="20"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -37,7 +41,7 @@
                             <p:outputLabel value="Nombre(s) Usuario" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  size="75" maxlength="100"/>
+                            <p:inputText value="#{segUsuarioMB.nombres}"  size="75" maxlength="100"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -45,7 +49,7 @@
                             <p:outputLabel value="Apellido(s) Usuario" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  size="75" maxlength="100"/>
+                            <p:inputText value="#{segUsuarioMB.apellidos}" size="75" maxlength="100"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -53,7 +57,7 @@
                             <p:outputLabel value="Dirección"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  size="75" maxlength="200"/>
+                            <p:inputText  value="#{segUsuarioMB.direccion}" size="75" maxlength="200"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -61,7 +65,7 @@
                             <p:outputLabel value="Telefono 1"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  maxlength="10"/>
+                            <p:inputText value="#{segUsuarioMB.telefono1}" maxlength="10"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -69,7 +73,7 @@
                             <p:outputLabel value="Telefono 2"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  maxlength="10"/>
+                            <p:inputText value="#{segUsuarioMB.telefono2}" maxlength="10"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -77,7 +81,7 @@
                             <p:outputLabel value="Email"/>
                         </p:column>
                         <p:column>
-                            <p:inputText  size="75" maxlength="200"/>
+                            <p:inputText value="#{segUsuarioMB.email}"  size="75" maxlength="200"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -85,7 +89,7 @@
                             <p:outputLabel value="Usuario" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:inputText maxlength="10"/>
+                            <p:inputText value="#{segUsuarioMB.usuario}" maxlength="10"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -93,7 +97,7 @@
                             <p:outputLabel value="Contraseña" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:password maxlength="10"/>        
+                            <p:password value="#{segUsuarioMB.password}" maxlength="10"/>        
                         </p:column>
                     </p:row>
                     <p:row>
@@ -101,7 +105,10 @@
                             <p:outputLabel value="Activo" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:selectOneMenu/>
+                            <p:selectOneMenu value="#{segUsuarioMB.activo}">
+                                <f:selectItem itemLabel="SI" itemValue="true"/>
+                                <f:selectItem itemLabel="NO" itemValue="false"/>
+                            </p:selectOneMenu>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -109,12 +116,28 @@
                             <p:outputLabel value="Abogado" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:selectOneMenu/>   
+                            <p:selectOneMenu value="#{segUsuarioMB.abogado}">
+                                <f:selectItem itemLabel="SI" itemValue="true"/>
+                                <f:selectItem itemLabel="NO" itemValue="false"/>
+                            </p:selectOneMenu>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
             </p:panel>              
         </h:form>
+
+        <p:dialog widgetVar="dlgSeleccionarUsuario" modal="true" header="Seleccionar Usuario" resizable="false" width="50%">
+            <h:form id="IdFormModalSeleccionarUsuario">
+                <p:dataTable emptyMessage="No hay usuario Creados" value="#{segUsuarioMB.listaUsuarios}" var="usuario" rowKey="#{usuario.idUsuario}" selectionMode="single" selection="#{segUsuarioMB.usuarioSeleccionado}">
+                    <p:column headerText="Usuario">#{usuario.usuario}</p:column>
+                    <p:column headerText="Nombre Usuario" width="70%">#{usuario.nombres} #{usuario.apellidos}</p:column>                    
+                    <p:column headerText="Activo">#{usuario.activo eq true ? 'SI':'NO'}</p:column>
+                </p:dataTable>
+                <p:separator />
+                <p:commandButton value="Seleccionar" actionListener="#{segUsuarioMB.cargarInformacionUsuario}"/>
+                <p:commandButton value="Deseleccionar" actionListener="#{segUsuarioMB.deseleccionarUsuario}"/>
+            </h:form>
+        </p:dialog>           
     </ui:define>
 </ui:composition>
 
