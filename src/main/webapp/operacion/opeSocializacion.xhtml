@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Gestión de Socicalización</ui:define>
+    <ui:define name="content">
+        <p:growl autoUpdate="true" showDetail="true"/>
+        <h:form id="IdFormGestionSocializacion">
+            <p:panel>
+                <p:commandButton icon="ui-icon-plus" value="Crear Socializacion" actionListener="#{opeSocializacionMB.deseleccionarSocializacion}"/>
+                <p:commandButton icon="ui-icon-search" value="Seleccionar Socialización" actionListener="#{opeSocializacionMB.cargarSocializaciones}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{opeSocializacionMB.accion}"/>
+                <!--p:commandButton icon="ui-icon-trash" value="Eliminar" onclick="PF('dlgSeleccinarSocializacion').show()"/-->
+            </p:panel>
+            <br/>
+            <p:panel header="Gestión de Socialización">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Nombre Socialización" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText  size="75" maxlength="200" value="#{opeSocializacionMB.nombreSocializacion}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Departamento" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeSocializacionMB.codDepartamento}" style="width: 180px">
+                                <p:ajax event="change" listener="#{opeSocializacionMB.cargarMunicipios}" update="@none"/>
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaDepartamento}" var="departamento" itemLabel="#{departamento.nomDepartamento}" itemValue="#{departamento.codDepartamento}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Municipio" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="IdListaMunicipios" value="#{opeSocializacionMB.codMunicipio}" style="width: 190px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeSocializacionMB.listaMunicipio}" var="municipio" itemLabel="#{municipio.nomMunicipio}" itemValue="#{municipio.cfgMunicipioPK.codMunicipio}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Fecha Socialización" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:calendar value="#{opeSocializacionMB.fecha}" navigator="true" locale="es" maxlength="10" timeZone="America/Bogota" pattern="dd/MM/yyyy" mask="99/99/9999"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Descripción" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea value="#{opeSocializacionMB.descripcionSocializacion}" style="width: 600px"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>            
+        </h:form>
+
+        <p:dialog widgetVar="dlgSeleccionarSocializacion" modal="true" header="Seleccinar Socialización" resizable="false" width="50%">
+            <h:form id="IdFormModalSeleccinarSocializacion">
+                <p:dataTable emptyMessage="No existen socialzaciones" value="#{opeSocializacionMB.listaSocializacion}" var="socializacion" rowKey="#{socializacion.idSocializacion}" selectionMode="single" selection="#{opeSocializacionMB.opeSocializacionSeleccionada}">
+                    <p:column headerText="Fecha">
+                        <h:outputLabel value="#{socializacion.fecSocializacion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Socializacion">#{socializacion.nomSocializacion}</p:column>
+                </p:dataTable>
+                <p:separator/>
+                <p:commandButton value="Seleccionar Socializacion" actionListener="#{opeSocializacionMB.cargarSocializacion}"/>
+                <p:commandButton value="Deseleccionar Socializacion" actionListener="#{opeSocializacionMB.deseleccionarSocializacion}"/>
+            </h:form>
+        </p:dialog>        
+    </ui:define>
+</ui:composition>
+

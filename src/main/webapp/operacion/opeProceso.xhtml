@@ -1,0 +1,164 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Gestion del Proceso</ui:define>
+    <ui:define name="content">
+        <script type="text/javascript">
+            function start() {
+                PF('statusDialog').show();
+            }
+
+            function stop() {
+                PF('statusDialog').hide();
+            }
+        </script>    
+        <h:form id="IdFormGestionProceso">
+            <p:growl autoUpdate="true" showDetail="true"/>
+            <p:panel>
+                <p:commandButton icon="ui-icon-plus" value="Crear Proceso" actionListener="#{opeProcesoMB.deseleccionarProceso}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{opeProcesoMB.accion}" />
+                <!--p:commandButton icon="ui-icon-trash" value="Eliminar" onclick="PF('dlgSeleccinarCliente').show()"/-->
+            </p:panel>
+            <br/>
+            <p:panel header="Gestión del Proceso">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel"> 
+                            <p:outputLabel value="No Proceso"/>
+                        </p:column>
+                        <p:column colspan="2">
+                            <p:inputText  value="#{opeProcesoMB.idProceso}" readonly="true"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Proceso" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea  value="#{opeProcesoMB.proceso}" style="width: 600px"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Fecha Proceso" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:calendar value="#{opeProcesoMB.fecha}" navigator="true" locale="es" maxlength="10" timeZone="America/Bogota" pattern="dd/MM/yyyy" mask="99/99/9999"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Tipo Proceso" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeProcesoMB.idTipoProceso}" style="width: 270px">
+                                <p:ajax event="change" listener="#{opeProcesoMB.cargarTipoSoporte}" update="@none"/>
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeProcesoMB.listaTipoProceso}" var="tipoProceso" itemLabel="#{tipoProceso.nomTipoProceso}" itemValue="#{tipoProceso.idTipoProceso}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Estado Proceso" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu style="width: 270px" value="#{opeProcesoMB.idEstadoProceso}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeProcesoMB.listaEstadoProceso}" var="estadoProceso" itemLabel="#{estadoProceso.nomEstadoProceso}" itemValue="#{estadoProceso.idEstadoProceso}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel header="Clientes del Proceso">
+                <p:commandButton class="marginBottom" icon="ui-icon-search" value="Seleccionar Cliente" actionListener="#{opeProcesoMB.cargarClientes}"/>
+                <p:dataTable emptyMessage="Proceso sin cliente(s) asociado(s)"  value="#{opeProcesoMB.listaClienteProceso}" var="cliente">
+                    <p:column width="5%" style="text-align: center">
+                        <p:commandButton icon="ui-icon-circle-minus" actionListener="#{opeProcesoMB.quitarCliente}">
+                            <f:attribute name="cliente" value="#{cliente}"/>
+                        </p:commandButton>
+                    </p:column>
+                    <p:column headerText="No Documento">#{cliente.numIdentificacion}</p:column>
+                    <p:column headerText="Cliente" width="70%">#{cliente.primerNombre} #{cliente.segundoNombre} #{cliente.primerApellido} #{cliente.segundoApellido}</p:column>
+                </p:dataTable>
+            </p:panel>
+            <br/>
+            <p:panel header="Soportes del Proceso">
+                <p:commandButton class="marginBottom" icon="ui-icon-circle-plus" value="Adicionar Soporte" onclick="PF('dlgAdicionarSoporte').show()"/>
+                <p:dataTable emptyMessage="El Proceso no tiene documentos de soporte" value="#{opeProcesoMB.listaOpeProcesoSoporte}" var="OpeSoporte" rowKey="#{OpeSoporte.opeProcesoSoportePK}" selectionMode="single" selection="#{opeProcesoMB.opeProcesoSoporteSeleccionado}">
+                    <p:ajax  event="rowSelect" listener="#{opeProcesoMB.crearDownloadSoporte}" update="@none"/>
+                    <p:column headerText="Fecha" width="15%">
+                        <h:outputLabel value="#{OpeSoporte.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Tipo Soporte">#{OpeSoporte.cfgTipoSoporteTipoProceso.cfgTipoSoporte.nomTipoSoporte}</p:column>
+                    <p:column headerText="Descripcion" width="40%">#{OpeSoporte.descripcion}</p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+        <br/>
+        <h:form>
+            <p:commandButton value="Ver Soporte" icon="ui-icon-circle-arrow-s" ajax="false">
+                <p:fileDownload value="#{opeProcesoMB.fileDownload}" />
+            </p:commandButton>
+        </h:form>
+        <p:dialog widgetVar="dlgSeleccinarCliente" modal="true" header="Seleccionar Cliente" resizable="false" width="50%">
+            <h:form id="IdFormModalSeleccinarCliente">
+                <p:dataTable emptyMessage="No hay clientes Creados" value="#{opeProcesoMB.listaCliente}" var="cliente" rowKey="#{cliente.idCliente}" selectionMode="single" selection="#{opeProcesoMB.clienteSeleccionado}">
+                    <p:ajax event="rowSelect" update="@none" listener="#{opeProcesoMB.asociarClientesAListaProceso}"/>
+                    <p:column headerText="No Documento">#{cliente.numIdentificacion}</p:column>
+                    <p:column headerText="Cliente" width="70%">#{cliente.primerNombre} #{cliente.segundoNombre} #{cliente.primerApellido} #{cliente.segundoApellido}</p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="dlgAdicionarSoporte" modal="true" header="Adicionar Soporte" resizable="false" width="50%">
+            <h:form id="IdFormModalAdicionarSoporte">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">Tipo Soporte</p:column>
+                        <p:column colspan="2">
+                            <p:selectOneMenu id="IdItemsTipoSoporte" value="#{opeProcesoMB.tipoSoporte}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeProcesoMB.listaSoporteProceso}" var="tipoSoporte" itemLabel="#{tipoSoporte.cfgTipoSoporte.nomTipoSoporte}" itemValue="#{tipoSoporte.cfgTipoSoporteTipoProcesoPK.idTipoSoporte}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            Descripcion
+                        </p:column>
+                        <p:column colspan="2">
+                            <p:inputTextarea value="#{opeProcesoMB.descripcionSoporte}"  style="width: 500px"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="text-align: left" colspan="3">
+                            <p:commandButton icon="ui-icon-circle-arrow-n" value="Seleccionar Archivo" onclick="PF('dlgSoporte').show()"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="text-align: center" colspan="3">
+                            <p:commandButton icon="ui-icon-disk" value="Retornar" onclick="PF('dlgAdicionarSoporte').hide()"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>   
+
+        <p:dialog id="IdModalSoporte" widgetVar="dlgSoporte" header="Buscar Soporte" modal="true" width="600px" resizable="false">
+            <h:form>
+                <p:fileUpload value="#{opeProcesoMB.file}" fileUploadListener="#{opeProcesoMB.handleFileUpload}" label="Buscar Soporte" cancelLabel="Cancelar" uploadLabel="Cargar" mode="advanced" update="@none"/>
+            </h:form>
+        </p:dialog>        
+    </ui:define>
+</ui:composition>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="operacion/opeDemanda.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="templates/contentDefault.xhtml" x="581" y="185" zoom="true"/>
+        <Node id="index.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="configuracion/confEmpresa.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="operacion/opeSocializacion.xhtml" x="77" y="138" zoom="true"/>
+        <Node id="seguridad/segUsuario.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="configuracion/confJuzgado.xhtml" x="382" y="57" zoom="true"/>
+        <Node id="configuracion/confAbogado.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="templates/leftDefault.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="operacion/opeProceso.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="home.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="operacion/opeCliente.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="templates/layout.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="templates/topDefault.xhtml" x="400" y="600" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

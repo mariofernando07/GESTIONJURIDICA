@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Gestion Juridica</title>
+        <h:outputStylesheet library="css" name="styles.css"/>
+    </h:head>
+    <h:body>
+        <style>
+            .ui-panel-titlebar {
+                text-align: center;
+            }
+        </style>
+        <p:growl id="message" autoUpdate="false" showDetail="true" />
+        <h:form>
+            <p:panel header="Gestión Juridica" style="width: 35%;margin: 200px auto">
+                <p:panelGrid class="panelGridSinBorder" style="margin: 0 auto">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Usuario:"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{loginMB.usuario}"/>
+                        </p:column>                    
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Contraseña:"/>
+                        </p:column>
+                        <p:column>
+                            <p:password value="#{loginMB.password}"/>
+                        </p:column>                    
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2" style="text-align: center">
+                            <p:commandButton icon="ui-icon-key" title="Iniciar Sesion" value="Ingresar" action="#{loginMB.iniciarSesion}"/>
+                        </p:column>
+                    </p:row>                             
+                </p:panelGrid>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>

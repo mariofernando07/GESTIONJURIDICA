@@ -1,0 +1,225 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Cliente</ui:define>
+    <ui:define name="content">
+        <h:form id="IdFormCliente">
+            <p:growl autoUpdate="true" showDetail="true"/>
+            <p:panel>
+                <p:commandButton icon="ui-icon-plus" value="Crear Cliente" actionListener="#{opeClienteMB.deseleccionarCliente}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{opeClienteMB.accion}"/>
+                <!--p:commandButton icon="ui-icon-trash" value="Eliminar" actionListener="# {opeClienteMB.eliminarCliente}"/-->
+                <p:commandButton icon="ui-icon-search" value="Seleccionar Cliente" actionListener="#{opeClienteMB.cargarClientes}"/>
+            </p:panel>
+            <br/>
+
+            <p:panel header="Cliente">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Tipo Identificacion" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.idTipoIdentificacion}" style="width: 180px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaIdentificacion}" var="identificacion" itemLabel="#{identificacion.nomDocumento}" itemValue="#{identificacion.idIdentificacion}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column  class="columnLabel">
+                            <p:outputLabel value="No. Identificacion" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText  value="#{opeClienteMB.numIdentificacion}" maxlength="20"/>
+                        </p:column>                        
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Primer Nombre" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.nombre1}" maxlength="50"/>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Segundo Nombre"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.nombre2}" maxlength="50"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Primer Apellido" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.apellido1}" maxlength="50"/>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Segundo Apellido"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.apellido2}" maxlength="50"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Sexo" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.idGenero}" style="width: 100px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaGenero}" var="genero" itemLabel="#{genero.nomGenero}" itemValue="#{genero.idGenero}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Estado Civil" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.idEstadoCivil}" style="width: 120px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{aplicacionMB.listaEstadoCivil}" var="estadoCivil" itemLabel="#{estadoCivil.nomEstadoCivil}" itemValue="#{estadoCivil.idEstadoCivil}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Departamento" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.codDepartamento}" style="width: 180px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaDepartamento}" var="departamento" itemLabel="#{departamento.nomDepartamento}" itemValue="#{departamento.codDepartamento}"/>
+                                <p:ajax event="change" listener="#{opeClienteMB.cargarMunicipios}" update="@none"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Municipio" class="labelFormularioObligatorio"/>        
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="IdListaMunicipios" value="#{opeClienteMB.codMunicipio}" style="width: 190px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeClienteMB.listaMunicipio}" var="municipio" itemLabel="#{municipio.nomMunicipio}" itemValue="#{municipio.cfgMunicipioPK.codMunicipio}"/> 
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Socialización"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.idSocializacion}" style="width: 180px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaSocializacion}" var="socializacion" itemLabel="#{socializacion.nomSocializacion}" itemValue="#{socializacion.idSocializacion}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Tipo Dirección"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeClienteMB.idTipoDireccion}" style="width: 100px">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaTipoDireccion}" var="tipoDireccion" itemLabel="#{tipoDireccion.nomTipoDireccion}" itemValue="#{tipoDireccion.idTipoDireccion}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Dirección" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText value="#{opeClienteMB.direccion}" size="61" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel"> 
+                            <p:outputLabel value="Telefono 1"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.tel1}"/>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Telefono 2"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.tel2}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Doc Conyuge"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.docConyuge}" maxlength="20"/>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Telefono Conyuge"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{opeClienteMB.telConyuge}" maxlength="10"/>                
+                        </p:column>                       
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Nombre Conyuge"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText  value="#{opeClienteMB.nombreConyuge}" maxlength="200" size="61"/>
+                        </p:column>                                                       
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel header="Procesos del Cliente">
+                <p:commandButton  class="marginBottom" icon="ui-icon-folder-open" action="#{opeProcesoMB.cargarProceso()}" value="Ver Proceso"/>
+                <p:dataTable emptyMessage="El cliente no tiene Procesos" value="#{opeClienteMB.listaProceso}" var="proceso" rowKey="#{proceso.idProceso}" selection="#{opeProcesoMB.opeProcesoSeleccionado}" selectionMode="single">
+                    <p:column headerText="No Proceso">#{proceso.idProceso}</p:column>
+                    <p:column headerText="Proceso">#{proceso.nomProceso}</p:column>
+                    <p:column headerText="Tipo Proceso">#{proceso.idTipoProceso.nomTipoProceso}</p:column>
+                    <p:column headerText="Estado">#{proceso.idEstadoProceso.nomEstadoProceso}</p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputLabel value="#{proceso.fecProceso}" >
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="No Clientes">0</p:column>
+                </p:dataTable>
+
+            </p:panel>
+            <br/>
+            <p:panel header="Demandas del Cliente">
+                <p:commandButton  class="marginBottom" icon="ui-icon-folder-open" action="#{opeDemandaMB.cargarDemanda(true)}" value="Ver Demanda"/>
+                <p:dataTable emptyMessage="El cliente no tiene demandas" value="#{opeClienteMB.listaDemanda}" var="demanda" rowKey="#{demanda.idDemanda}" selectionMode="single" selection="#{opeDemandaMB.opeDemandaSeleccionada}">
+                    <p:column headerText="No Demanda"> #{demanda.codDemanda}</p:column>
+                    <p:column headerText="Descripcion">#{demanda.descDemanda}</p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputLabel value = "#{demanda.fecDemanda}"> 
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Tipo Demanda">#{demanda.idTipoDemanda.nomTipoDemanda}</p:column>
+                    <p:column headerText="No Proceso">#{demanda.idProceso.idProceso}</p:column>
+                    <p:column headerText="Abogado">#{demanda.idUsuario.nombres} #{demanda.idUsuario.apellidos}</p:column>
+                    <p:column headerText="Juzgado">#{demanda.idJuzgado.nomJuzgado}</p:column>
+                    <p:column headerText="Juez">#{demanda.juez}</p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+
+        <p:dialog widgetVar="dlgSeleccionarCliente" modal="true" header="Seleccionar Cliente" resizable="false" width="50%" >
+            <h:form id="IdFormModalSeleccionarCliente">
+                <p:dataTable emptyMessage="No hay clientes Creados" value="#{opeClienteMB.listaCliente}" var="cliente" selection="#{opeClienteMB.clienteSeleccionado}" selectionMode="single" rowKey="#{cliente.idCliente}">
+                    <p:column headerText="No Documento">#{cliente.numIdentificacion}</p:column>
+                    <p:column headerText="Cliente" width="70%">#{cliente.primerNombre} #{cliente.segundoNombre} #{cliente.primerApellido} #{cliente.segundoApellido}</p:column>
+                </p:dataTable>
+                <p:separator/>
+                <p:commandButton value="Seleccionar Cliente" actionListener="#{opeClienteMB.cargarInformacionCliente}"/>
+                <p:commandButton value="Deseleccionar Cliente" actionListener="#{opeClienteMB.deseleccionarCliente}"/>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+

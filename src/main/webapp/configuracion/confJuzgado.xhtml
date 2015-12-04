@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Gestión de Juzgados</ui:define>
+    <ui:define name="content">
+        <p:growl autoUpdate="true" showDetail="true"/>
+        <h:form id="IdFormGestionJuzgados">
+            <p:panel>
+                <p:commandButton icon="ui-icon-plus" value="Crear Juzgado" actionListener="#{confJuzgadoMB.deseleccionarJuzgado}"/>
+                <p:commandButton icon="ui-icon-search" value="Seleccionar Juzgado" actionListener="#{confJuzgadoMB.cargarJuzgados}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{confJuzgadoMB.accion}"/>
+            </p:panel>
+            <br/>           
+            <p:panel header="Juzgado">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Codigo Juzgado" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confJuzgadoMB.codigoJuzgado}" maxlength="30"/>
+                        </p:column>
+                        <p:column  class="columnLabel">
+                            <p:outputLabel value="Tipo Juzgado" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{confJuzgadoMB.idTipoJuzgado}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaTipoJuzgado}" var="tipoJuzago" itemLabel="#{tipoJuzago.nomTipoJuzgado}" itemValue="#{tipoJuzago.idTipoJuzgado}"/>
+                            </p:selectOneMenu>
+                        </p:column>                        
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Nombre Juzgado" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText value="#{confJuzgadoMB.nombreJuzgado}" size="61" maxlength="200"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Juez"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText value="#{confJuzgadoMB.juez}" maxlength="200" size="61"/>
+                        </p:column>                                                       
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Departamento" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{confJuzgadoMB.codDepartamento}">
+                                <p:ajax event="change" listener="#{confJuzgadoMB.cargarMunicipios}" update="@none"/>
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaDepartamento}" var="departamento" itemLabel="#{departamento.nomDepartamento}" itemValue="#{departamento.codDepartamento}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Municipio" class="labelFormularioObligatorio"/>        
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="IdListaMunicipios" value="#{confJuzgadoMB.codMunicipio}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{confJuzgadoMB.listaMunicipio}" var="municipio" itemLabel="#{municipio.nomMunicipio}" itemValue="#{municipio.cfgMunicipioPK.codMunicipio}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Dirección" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText value="#{confJuzgadoMB.direccion}" size="61" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel"> 
+                            <p:outputLabel value="Telefono"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confJuzgadoMB.telefono}" maxlength="10" />
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Fax" />
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confJuzgadoMB.fax}" maxlength="10"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Email"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText value="#{confJuzgadoMB.email}" maxlength="200" size="61"/>                
+                        </p:column>                       
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>          
+        </h:form>
+        <p:dialog widgetVar="dlgModalSeleccionarJuzgado" resizable="false" modal="true" header="Seleccionar Juzgado" width="50%">
+            <h:form id="IdFormModalJuzgado">
+                <p:dataTable emptyMessage="No hay Juzgados registrados en el sistema" value="#{confJuzgadoMB.listaJuzgado}" var="juzgado" rowKey="#{juzgado.idJuzgado}" selectionMode="single" selection="#{confJuzgadoMB.juzgadoSeleccionado}">
+                    <p:column headerText="Codigo">
+                        #{juzgado.codJuzgado}
+                    </p:column>
+                    <p:column headerText="Juzgado">
+                        #{juzgado.nomJuzgado}
+                    </p:column>
+                    <p:column headerText="Municipio">
+                        #{juzgado.cfgMunicipio.nomMunicipio}
+                    </p:column>
+                </p:dataTable>
+                <p:separator/>
+                <p:commandButton value="Seleccionar" actionListener="#{confJuzgadoMB.cargarInformacionJuzgado}"/>
+                <p:commandButton value="Deseleccionar" actionListener="#{confJuzgadoMB.deseleccionarJuzgado}"/>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+

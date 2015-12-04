@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Gestión de Abogados</ui:define>
+    <ui:define name="content">
+        <p:growl autoUpdate="true" showDetail="true"/>
+        <h:form id="IdFormGestionAbogados">
+            <p:panel>
+                <p:commandButton icon="ui-icon-plus" value="Crear Abogado" actionListener="#{confAbogadoMB.deseleccionarAbogado}"/>
+                <p:commandButton icon="ui-icon-search" value="Seleccionar Abogado" actionListener="#{confAbogadoMB.cargarAbogados}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{confAbogadoMB.accion}"/>                
+            </p:panel>
+            <br/>
+            <p:panel header="Gestión de Abogados">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Tipo Documento" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{confAbogadoMB.idTipoDocumento}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaIdentificacion}" var="identificacion" itemLabel="#{identificacion.nomDocumento}" itemValue="#{identificacion.idIdentificacion}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="No Documento" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confAbogadoMB.numDocumento}" maxlength="20"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Nombre(s) Usuario" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText  value="#{confAbogadoMB.nombres}" size="75" maxlength="100"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Apellido(s) Usuario" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText  value="#{confAbogadoMB.apellidos}" size="75" maxlength="100"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Dirección"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confAbogadoMB.direccion}" size="75" maxlength="200"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Telefono 1"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confAbogadoMB.telefono1}" maxlength="10"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Telefono 2"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText  value="#{confAbogadoMB.telefono2}"  maxlength="10"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Email"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText value="#{confAbogadoMB.email}"  size="75" maxlength="200"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Activo" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{confAbogadoMB.activo}">
+                                <f:selectItem itemLabel="SI" itemValue="true"/>
+                                <f:selectItem itemLabel="NO" itemValue="false"/>    
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>              
+        </h:form>
+        <p:dialog widgetVar="dlgSeleccionarAbogado" modal="true" header="Seleccionar Abogado" resizable="false" width="50%">
+            <h:form id="IdFormModalSeleccionarAbogado">
+                <p:dataTable emptyMessage="No hay abogados Creados" value="#{confAbogadoMB.listaAbogado}" var="abogado" rowKey="#{abogado.idUsuario}" selectionMode="single" selection="#{confAbogadoMB.abogadoSeleccionado}">
+                    <p:column headerText="No Documento">#{abogado.numeroDocumento}</p:column>
+                    <p:column headerText="Cliente" width="70%">#{abogado.nombres} #{abogado.apellidos}</p:column>
+                    <p:column headerText="Activo">#{abogado.activo eq true ? 'SI':'NO'}</p:column>
+                </p:dataTable>
+                <p:separator />
+                <p:commandButton value="Seleccionar" actionListener="#{confAbogadoMB.cargarInformacionAbogado}"/>
+                <p:commandButton value="Deseleccionar" actionListener="#{confAbogadoMB.deseleccionarAbogado}"/>
+            </h:form>
+        </p:dialog>        
+    </ui:define>
+</ui:composition>
+

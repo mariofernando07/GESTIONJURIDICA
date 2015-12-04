@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:form id="IdFormToolBar">
+        <style>
+            /*ul.ui-menu-child {
+                white-space: nowrap;
+                width: auto !important;
+            }*/
+            ul.ui-widget-content.ui-menu-list.ui-menu-child {
+                width: 220px;
+            }
+        </style>
+        <p:toolbar style="margin: 0px">
+            <f:facet name="left">
+
+                <h:outputLabel class="titulo_principal">Gestión Juridica</h:outputLabel>
+
+                <span class="ui-separator">
+                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                </span>
+                <!--p:outputLabel># {sesionMB.empresaActual.nomEmpresa} - # {sesionMB.sedeActual.nomSede}</p:outputLabel--> 
+                <span class="ui-separator">
+                    <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                </span>                    
+                <!--p:outputLabel># {sesionMB.usuarioActual.nombreCompleto()}</p:outputLabel-->    
+            </f:facet>
+
+            <f:facet name="right">
+                <p:commandButton  title="Salir" icon="ui-icon-power"  actionListener="#{sesionMB.cerrarSesion}"/>
+            </f:facet>
+
+        </p:toolbar> 
+        <br/>
+        <h:form>  
+            <p:growl id="messages"/>
+
+            <p:menubar >
+                <p:menuitem value="Inicio" icon="ui-icon-home" outcome="/home.xhtml" title="Pagina Inicio"/>
+                <p:submenu label="Catálogos" icon="ui-icon-gear">
+                    <p:menuitem value="Empresa" outcome="/configuracion/confEmpresa.xhtml" />
+                    <p:separator />
+                    <p:submenu label="Parámetros Básicos">
+                        <p:menuitem value="Tipo Identificacion" url="#" />
+                        <p:separator />
+                        <p:menuitem value="Estado Civil" url="#" />
+                        <p:separator />
+                        <p:menuitem value="División Geográfica" url="#" />
+                    </p:submenu>
+                    <p:separator />
+                    <p:submenu label="Parámetros Juridicos">
+                        <p:menuitem value="Tipo de Demanda - Etapas" url="#" />
+                        <p:separator />
+                        <p:menuitem value="Tipo de Procesos - Soportes" url="#" />
+                        <p:separator />
+                        <p:menuitem value="Juzgados" outcome="/configuracion/confJuzgado.xhtml" />
+                        <p:separator />
+                        <p:menuitem value="Abogados" outcome="/configuracion/confAbogado.xhtml" />                        
+                    </p:submenu>
+                </p:submenu>
+
+                <p:submenu label="Gestión Juridica" icon="ui-icon-suitcase">
+                    <p:menuitem value="Gestión de Cliente" outcome="/operacion/opeCliente.xhtml" />
+                    <p:separator />
+                    <p:menuitem value="Gestión de Proceso" outcome="/operacion/opeProceso.xhtml" />
+                    <p:separator />
+                    <p:menuitem value="Gestión de Demanda" outcome="/operacion/opeDemanda.xhtml" />
+                    <p:separator />
+                    <p:menuitem value="Gestión de Socialización" outcome="/operacion/opeSocializacion.xhtml"/>
+
+
+
+
+                </p:submenu>
+
+                <p:submenu label="Informes" icon="ui-icon-folder-collapsed">
+                    <p:menuitem value="Informe de Procesos" url="#" />
+                    <p:separator />
+                    <p:menuitem value="Informe de Demandas" url="#" />
+                    <p:separator />
+                    <p:menuitem value="Informe de Clientes" url="#" />
+                </p:submenu>
+
+                <p:menuitem value="Seguridad" outcome="/seguridad/segUsuario.xhtml" />
+            </p:menubar>
+        </h:form>        
+    </h:form>
+</ui:composition>
+

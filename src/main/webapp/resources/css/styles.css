@@ -1,0 +1,85 @@
+/* 
+    Created on : 18/06/2015, 03:35:05 PM
+    Author     : mario
+*/
+body {
+    font-family: sans-serif;
+    font-size: .8em !important;
+
+}
+
+.titulo_principal{
+    color: white;
+    font-size: 1.6em;
+    text-shadow: black;
+}
+
+.columnLabel{
+    text-align: right;
+}
+
+/*.caption {
+    color:  gray;
+}*/
+
+.presentacionIndex {
+    width: 100%;
+    height: auto;
+    text-align: center;
+}
+
+.panelGridSinBorder tr, .panelGridSinBorder td {
+    border: none !important;
+}
+
+.upperCase{
+    text-transform: uppercase
+}
+
+.lowerCase{
+    text-transform: lowercase
+}
+
+.campoFormulario{
+    float: left;margin-right: .1em
+}
+
+.labelFormulario{
+    float: left; padding: .4em; margin: 0px;  margin-right: .1em;border-radius:.45em;background: #3c667c; font-weight: bold;color: #e0e0e0;box-shadow: 0px .25px .25em black;width: 105px;text-align: left;   
+}
+
+.labelFormularioObligatorio{
+    
+}
+
+.labelFormularioObligatorio::after{
+    content: " *";color: red;
+}
+
+.labelFormularioInformativa{
+    float: left; padding: .25em; margin: 0px;  margin-right: .5em; font-weight: bold;font-style: italic;width: auto
+}
+
+.divSalto{
+    clear: right;margin-bottom: .125em
+}
+.divContent{
+    /*background: #3c667c;color: #e0e0e0;padding: .25em;border-radius:.45em;width: 20%;*/float: right;
+}
+
+.label{
+    font-weight: bold;
+    text-align: left;
+}
+
+.ui-selectonemenu-filter-container {//ajusta la caja de filtrado de las listas desplegables
+    width: 98% !important;
+}
+
+.cajaH{
+    border-radius: .45em; width: 180px;padding: 0 .25em;font-style: italic;height: 19px
+}
+
+.marginBottom {
+    margin-bottom: .5em;
+}

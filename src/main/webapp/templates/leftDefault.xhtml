@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <style>
+        .ui-slidemenu-wrapper {
+            height: 250px !important;
+        }
+        .ui-slidemenu-content {
+            height: 230px !important;
+        }
+    </style>
+    <h:form id="IdFormMenu">
+        <p:slideMenu style="width: 95%" backLabel="Regresar">
+            <p:submenu label="Facturacion">
+                <p:menuitem icon="ui-icon-print" value="Facturacion"  outcome="/facturacion/factura.xhtml"/>
+                <p:menuitem icon="ui-icon-script" value="Listado de Facturas" outcome="/facturacion/listadoFacturas.xhtml"/>
+                <p:menuitem icon="ui-icon-search" value="Consultar Precios" outcome="/facturacion/consultarPrecio.xhtml" />
+                <p:menuitem icon="ui-icon-script" value="Cotizacion" outcome="/facturacion/cotizacion.xhtml"/>
+            </p:submenu>        
+            <p:submenu label="Inventario" expanded="false">
+                <p:menuitem icon="ui-icon-refresh" value="Movimiento Inventario" outcome="/inventario/movimientoInventario.xhtml"/>
+            </p:submenu>
+            <p:submenu label="Movimiento Caja" expanded="false" >
+                <p:menuitem icon="ui-icon-unlocked" value="Abrir Caja" outcome="/movimientoCaja/abrirCaja.xhtml"/>
+                <p:menuitem icon="ui-icon-locked" value="Cerrar Caja" outcome="/movimientoCaja/cerrarCaja.xhtml"/>
+                <p:menuitem icon="ui-icon-calendar" value="Abono" outcome="/movimientoCaja/abonos.xhtml"/>
+                <p:menuitem icon="ui-icon-transfer-e-w" value="Movimiento Caja" outcome="/movimientoCaja/movimientoCaja.xhtml"/>
+            </p:submenu>
+            <p:submenu label="Configuracion">
+                <p:submenu label="General" expanded="false">
+                    <p:menuitem icon="ui-icon-suitcase" value="Empresa" outcome="/configuraciones/empresa.xhtml"/>
+                    <p:menuitem icon="ui-icon-home" value="Sedes" outcome="/configuraciones/sede.xhtml" />
+                    <p:menuitem icon="ui-icon-note" value="Documentos" outcome="/configuraciones/documento.xhtml" />
+                </p:submenu>
+                <p:submenu label="Facturacion"  style="height: auto" expanded="false">
+                    <p:menuitem icon="ui-icon-contact" value="Clientes" outcome="/configuraciones/cliente.xhtml" />
+                    <p:menuitem icon="ui-icon-tag" value="Cajas" outcome="/configuraciones/caja.xhtml"/>
+                    <p:menuitem icon="ui-icon-document" value="Impuestos" outcome="/configuraciones/impuesto.xhtml" />
+                </p:submenu>
+                <p:submenu label="Inventario"  style="height: auto" expanded="false">
+                    <p:menuitem icon="ui-icon-gear" value="Categoria" outcome="/configuraciones/categoria.xhtml" />
+                    <p:menuitem icon="ui-icon-pin-w" value="Referencia" outcome="/configuraciones/referencia.xhtml" />
+                    <p:menuitem icon="ui-icon-star" value="Marca" outcome="/configuraciones/marca.xhtml" />
+                    <p:menuitem icon="ui-icon-cart" value="Productos" outcome="/configuraciones/producto.xhtml" />
+                    <p:menuitem icon="ui-icon-pencil" value="Lista Precios" outcome="/configuraciones/listaPrecios.xhtml" />
+                    <p:menuitem icon="ui-icon-calculator" value="Kit" outcome="/configuraciones/kit.xhtml" />
+                    <p:menuitem icon="ui-icon-person" value="Proveedor" outcome="/configuraciones/proveedor.xhtml" />
+                </p:submenu>
+                <p:submenu label="Seguridad"  style="height: auto" expanded="false">
+                    <p:menuitem icon="ui-icon-person" value="Usuarios" outcome="/configuraciones/usuario.xhtml" />
+                </p:submenu>
+            </p:submenu>
+            <p:submenu label="Informes"  style="height: auto" expanded="false">
+                <p:menuitem icon="ui-icon-script" value="Informe Facturacion" outcome="/informes/informeFacturacion.xhtml" />
+                <p:menuitem icon="ui-icon-clipboard" value="Informe Separado" outcome="/informes/informeSeparado.xhtml" />
+                <p:menuitem icon="ui-icon-pin-w" value="Informe Caja - Consolidado" outcome="/informes/informeMovimientoCaja.xhtml" />
+                <p:menuitem icon="ui-icon-pin-w" value="Informe Caja - Detallado" outcome="/informes/informeDetalladoCaja.xhtml" />
+                <p:menuitem icon="ui-icon-contact" value="Informe Cliente" outcome="/informes/informeClientes.xhtml" />            
+                <p:menuitem icon="ui-icon-star" value="Informe Inventario - Consolidado" outcome="/informes/informeInventario.xhtml" />
+                <p:menuitem icon="ui-icon-star" value="Informe Inventario - Detallado" outcome="/informes/informeMovInventario.xhtml" />
+                <p:menuitem icon="ui-icon-lightbulb" value="Informe Producto" outcome="/informes/informeProductos.xhtml" />
+            </p:submenu>
+        </p:slideMenu>
+    </h:form>              
+</ui:composition>
+

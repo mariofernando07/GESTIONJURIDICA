@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Gestion de Demanda</ui:define>
+    <ui:define name="content">
+        #{opeDemandaMB.cargarListados()}
+        <p:growl autoUpdate="true" showDetail="true"/>
+        <h:form id="IdFormGestionDemanda">
+            <p:panel>
+                <p:commandButton icon="ui-icon-search" value="Seleccionar Cliente" actionListener="#{opeDemandaMB.cargarClientes}"/>
+                <p:commandButton icon="ui-icon-disk" value="Guardar" actionListener="#{opeDemandaMB.accion}"/>
+                <!--p:commandButton icon="ui-icon-trash" value="Eliminar" onclick="PF('dlgSeleccionarCliente').show()"/-->
+            </p:panel>
+            <br/>
+            <p:panel header="Cliente">
+                <p:panelGrid id="IdPanelCliente" class="panelGridSinBorder">
+                    <p:column headerText="No Documento">#{opeDemandaMB.numIdentificacionCliente}</p:column>
+                    <p:column headerText="Cliente">#{opeDemandaMB.nombreCompletoCliente}</p:column>
+                </p:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel header="Procesos  Aprobados del Cliente">
+                <p:dataTable id="IdTablaProcesos" emptyMessage="No existen Procesos Aprobados" value="#{opeDemandaMB.listaProceso}" var="proceso" rowKey="#{proceso.idProceso}" selectionMode="single" selection="#{opeDemandaMB.opeProcesoSeleccionado}">
+                    <p:ajax event="rowSelect" listener="#{opeDemandaMB.buscarDemanda}" update="@none" />
+                    <p:column headerText="No Proceso">#{proceso.idProceso}</p:column>
+                    <p:column headerText="Proceso">#{proceso.nomProceso}</p:column>
+                    <p:column headerText="Tipo Proceso">#{proceso.idTipoProceso.nomTipoProceso}</p:column>
+                    <p:column headerText="Estado">#{proceso.idEstadoProceso.nomEstadoProceso}</p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputLabel value="#{proceso.fecProceso}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="No Clientes">0</p:column>
+                </p:dataTable>
+
+            </p:panel>            
+            <br/>
+            <p:panel id="IdPanelDemanda" header="Gestión de Demanda">
+                <p:panelGrid class="panelGridSinBorder">
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="No Demanda" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText maxlength="30" value="#{opeDemandaMB.numDemanda}"/>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="No Proceso"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText readonly="true" value="#{opeDemandaMB.numProceso}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Tipo Demanda" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeDemandaMB.idTipoDemanda}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{aplicacionMB.listaTipoDemanda}" var="tipoDemanda" itemLabel="#{tipoDemanda.nomTipoDemanda}" itemValue="#{tipoDemanda.idTipoDemanda}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Fecha Demanda" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:calendar value="#{opeDemandaMB.fecha}" navigator="true" locale="es" maxlength="10" timeZone="America/Bogota" pattern="dd/MM/yyyy" mask="99/99/9999"/>
+                        </p:column>                        
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Abogado" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeDemandaMB.idAbogado}">
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeDemandaMB.listaAbogado}" var="abogado" itemLabel="#{abogado.nombres} #{abogado.apellidos}" itemValue="#{abogado.idUsuario}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Juzgado" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{opeDemandaMB.idJuzgado}">
+                                <p:ajax event="change" listener="#{opeDemandaMB.buscarJuez}" update="@none"/> 
+                                <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{opeDemandaMB.listaJuzgado}" var="juzgado" itemLabel="#{juzgado.nomJuzgado}" itemValue="#{juzgado.idJuzgado}"/>
+                            </p:selectOneMenu>
+                        </p:column>                        
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Juez"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText id="IdJuez" size="75" value="#{opeDemandaMB.juez}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Descripcion Demanda" class="labelFormularioObligatorio"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputTextarea  style="width: 600px" value="#{opeDemandaMB.descripcionDemanda}"/>
+                        </p:column>
+                    </p:row>                    
+                </p:panelGrid>
+            </p:panel>
+            <br/>
+            <p:panel id="IdPanelSoporte" header="Soportes del Proceso">
+                <p:dataTable emptyMessage="El Proceso asociado a la demanda no tiene documentos de soporte" value="#{opeDemandaMB.listaOpeProcesoSoporte}" var="OpeSoporte" rowKey="#{OpeSoporte.opeProcesoSoportePK}" selectionMode="single" selection="#{opeDemandaMB.opeProcesoSoporteSeleccionado}">
+                    <p:ajax  event="rowSelect" listener="#{opeDemandaMB.crearDownloadSoporte}" update="@none"/>
+                    <p:column headerText="Fecha" width="15%">
+                        <h:outputLabel value="#{OpeSoporte.fecha}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputLabel>
+                    </p:column>
+                    <p:column headerText="Tipo Soporte">#{OpeSoporte.cfgTipoSoporteTipoProceso.cfgTipoSoporte.nomTipoSoporte}</p:column>
+                    <p:column headerText="Descripcion" width="40%">#{OpeSoporte.descripcion}</p:column>
+                </p:dataTable>
+            </p:panel>           
+        </h:form>
+        <br/>
+        <h:form>
+            <p:commandButton value="Ver Soporte" icon="ui-icon-circle-arrow-s" ajax="false">
+                <p:fileDownload value="#{opeDemandaMB.fileDownload}" />
+            </p:commandButton>
+        </h:form>
+
+        <p:dialog widgetVar="dlgSeleccionarCliente" modal="true" header="Seleccionar Cliente" resizable="false" width="50%">
+            <h:form id="IdFormModalSeleccionarCliente">
+                <p:dataTable emptyMessage="No hay clientes Creados" value="#{opeDemandaMB.listaCliente}" var="cliente" rowKey="#{cliente.idCliente}" selectionMode="single" selection="#{opeDemandaMB.opeClienteSeleccionado}">
+                    <p:column headerText="No Documento">#{cliente.numIdentificacion}</p:column>
+                    <p:column headerText="Cliente" width="70%">#{cliente.primerNombre} #{cliente.segundoNombre} #{cliente.primerApellido} #{cliente.segundoApellido}</p:column>
+                </p:dataTable>
+                <p:separator/>
+                <p:commandButton value="Seleccionar Cliente" actionListener="#{opeDemandaMB.cargarInformacionCliente}"/>
+                <p:commandButton value="Deseleccionar Cliente" actionListener="#{opeDemandaMB.deseleccionarCliente}"/>
+            </h:form>
+        </p:dialog>        
+
+    </ui:define>
+</ui:composition>
