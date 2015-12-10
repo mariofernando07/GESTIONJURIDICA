@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Informe Proceso</ui:define>
+    <ui:define name="content">
+        #{informeMB.cargarProcesos()}
+        <h:form>
+            <p:dataTable id="IdTablaInfProceso" emptyMessage="No hay procesos creados" value="#{informeMB.listaProceso}" disabledSelection="true" 
+                         widgetVar="procesoWV"
+                         var="proceso" rowKey="#{proceso.idProceso}" rows="15" paginatorPosition="bottom"
+                         paginator="true" currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                <f:facet name="header">
+                    Informe Proceso
+                </f:facet>
+                <f:facet name="{Exporters}">
+                    <h:commandLink title="Descargar">
+                        <p:graphicImage library="img" name="csv.png" width="24"/>
+                        <p:dataExporter type="csv" target="IdTablaInfProceso" fileName="procesos" encoding="utf-8"/>
+                    </h:commandLink>
+                </f:facet>               
+                <p:column headerText="#Proceso" filterBy="#{proceso.idProceso}" filterMatchMode="exact">
+                    <h:outputText value="#{proceso.idProceso}"/>                    
+                </p:column>
+                <p:column headerText="Proceso" filterBy="#{proceso.nomProceso}" filterMatchMode="contains" filterStyle="width:90%">
+                    <h:outputText value="#{proceso.nomProceso}"/>
+                </p:column>
+                <p:column headerText="Tipo Proceso" filterBy="#{proceso.idTipoProceso.idTipoProceso}">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('procesoWV').filter()" style="width: 85%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{informeMB.listaTipoProceso}" var="tipoProceso" itemLabel="#{tipoProceso.nomTipoProceso}" itemValue="#{tipoProceso.idTipoProceso}"/>
+                        </p:selectOneMenu>
+                    </f:facet>                    
+                    <h:outputText value="#{proceso.idTipoProceso eq null ? '' :proceso.idTipoProceso.nomTipoProceso}"/>
+                </p:column>
+                <p:column headerText="Estado Proceso" filterBy="#{proceso.idEstadoProceso.idEstadoProceso}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('procesoWV').filter()" style="width: 85%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{informeMB.listaEstadoProceso}" var="estadoProceso" itemLabel="#{estadoProceso.nomEstadoProceso}" itemValue="#{estadoProceso.idEstadoProceso}"/>
+                        </p:selectOneMenu>
+                    </f:facet>  
+                    <h:outputText value="#{proceso.idEstadoProceso eq null ? '': proceso.idEstadoProceso.nomEstadoProceso}"/>
+                </p:column>
+                <p:column headerText="Fecha" filterBy="#{proceso.fecProceso}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:calendar style="width: 85%" locale="es" pattern="dd-MM-yyyy" navigator="true">
+                            <p:ajax event="dateSelect" oncomplete="PF('procesoWV').filter()"/>
+                        </p:calendar>
+                    </f:facet>                    
+                    <h:outputText value="#{proceso.fecProceso}">
+                        <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                    </h:outputText>
+                </p:column>                
+            </p:dataTable>          
+        </h:form>       
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Informe Cliente</ui:define>
+    <ui:define name="content">
+        #{informeMB.cargarClientes()}
+        <h:form>
+            <p:dataTable id="IdTablaInfCliente" emptyMessage="No hay clientes creados" value="#{informeMB.listaCliente}" disabledSelection="true" 
+                         widgetVar="clienteWV"
+                         var="cliente" rowKey="#{cliente.idCliente}" rows="15" paginatorPosition="bottom"
+                         paginator="true" currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                <f:facet name="header">
+                    Informe Cliente
+                </f:facet>
+                <f:facet name="{Exporters}">
+                    <h:commandLink>
+                        <p:graphicImage library="img" name="csv.png" width="24"/>
+                        <p:dataExporter type="csv" target="IdTablaInfCliente" fileName="clientes" encoding="utf-8"/>
+                    </h:commandLink>
+                </f:facet>               
+                <p:column headerText="Identificacion" filterBy="#{cliente.numIdentificacion}" filterStyle="width: 80%">
+                    <h:outputText value="#{cliente.numIdentificacion}"/>                    
+                </p:column>
+                <p:column headerText="Apellidos" filterBy="#{cliente.primerApellido}" filterStyle="width: 80%">
+                    <h:outputText value="#{cliente.primerApellido} #{cliente.segundoApellido}"/>
+                </p:column>
+                <p:column headerText="Nombres" filterBy="#{cliente.primerNombre}" filterStyle="width: 80%">
+                    <h:outputText value="#{cliente.primerNombre} #{cliente.segundoNombre}"/>
+                </p:column>
+                <p:column headerText="Socializacion">
+                    <h:outputText value="#{cliente.idSocializacion eq null ? '': cliente.idSocializacion.nomSocializacion}"/>
+                </p:column>
+                <p:column headerText="Sexo" filterBy="#{cliente.idGenero.idGenero}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('clienteWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{aplicacionMB.listaGenero}" var="genero" itemLabel="#{genero.nomGenero}" itemValue="#{genero.idGenero}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{cliente.idGenero eq null ? '' : cliente.idGenero.nomGenero}"/>
+                </p:column>
+                <p:column headerText="Estado Civil" filterBy="#{cliente.idEstadoCivil.idEstadoCivil}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('clienteWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{aplicacionMB.listaEstadoCivil}" var="estadoCivil" itemLabel="#{estadoCivil.nomEstadoCivil}" itemValue="#{estadoCivil.idEstadoCivil}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{cliente.idEstadoCivil eq null ? '' : cliente.idEstadoCivil.nomEstadoCivil}"/>
+                </p:column>
+                <p:column headerText="Tipo Direccion" filterBy="#{cliente.idTipoDireccion.idTipoDireccion}">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('clienteWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{aplicacionMB.listaTipoDireccion}" var="tipoDireccion" itemLabel="#{tipoDireccion.nomTipoDireccion}" itemValue="#{tipoDireccion.idTipoDireccion}"/>
+                        </p:selectOneMenu>
+                    </f:facet>                    
+                    <h:outputText value="#{cliente.idTipoDireccion eq null ? '' : cliente.idTipoDireccion.nomTipoDireccion}"/>
+                </p:column>
+                <p:column headerText="Direccion"  filterBy="#{cliente.dirCliente}" filterStyle="width: 80%">
+                    <h:outputText value="#{cliente.dirCliente}"/>
+                </p:column>
+                <p:column headerText="Departamento">
+                    <h:outputLabel value="#{cliente.cfgMunicipio eq null ? '' : cliente.cfgMunicipio.cfgDepartamento.nomDepartamento}"/>
+                </p:column>
+                <p:column headerText="Municipio">
+                    <h:outputLabel value="#{cliente.cfgMunicipio eq null ? '' : cliente.cfgMunicipio.nomMunicipio}"/>
+                </p:column>
+                <p:column headerText="Telefono 1">
+                    <h:outputLabel value="#{cliente.telefono1}"/>
+                </p:column>
+                <p:column headerText="Telefono 2">
+                    <h:outputLabel value="#{cliente.telefono2}"/>
+                </p:column>
+                <!--p:column headerText="#Procesos">
+
+                </p:column>
+                <p:column headerText="#Demandas">
+
+                </p:column-->                
+            </p:dataTable>          
+        </h:form>       
+    </ui:define>
+</ui:composition>

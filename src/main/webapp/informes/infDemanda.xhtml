@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"              
+                template="../templates/layout.xhtml">
+    <ui:define name="title">Informe Demanda</ui:define>
+    <ui:define name="content">
+        #{informeMB.cargarDemandas()}
+        <h:form>
+            <p:dataTable id="IdTablaInfDemanda" emptyMessage="No hay demandas creadas" value="#{informeMB.listaDemanda}" disabledSelection="true" 
+                         widgetVar="demandaWV"
+                         var="demanda" rowKey="#{demanda.idDemanda}" rows="15" paginatorPosition="bottom"
+                         paginator="true" currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+                <f:facet name="header">
+                    Informe Demanda
+                </f:facet>
+                <f:facet name="{Exporters}">
+                    <h:commandLink>
+                        <p:graphicImage library="img" name="csv.png" width="24"/>
+                        <p:dataExporter type="csv" target="IdTablaInfDemanda" fileName="demandas" encoding="utf-8"/>
+                    </h:commandLink>                    
+                </f:facet>               
+                <p:column headerText="#Demanda" filterBy="#{demanda.codDemanda}">
+                    <h:outputText value="#{demanda.codDemanda}"/>                    
+                </p:column>
+                <p:column headerText="Descripcion" filterBy="#{demanda.descDemanda}" filterMatchMode="contains" filterStyle="width:85%">
+                    <h:outputText value="#{demanda.descDemanda}"/>
+                </p:column>
+                <p:column headerText="Fecha" filterBy="#{demanda.fecDemanda}">
+                    <f:facet name="filter">
+                        <p:calendar style="width: 85%" locale="es" pattern="dd-MM-yyyy" navigator="true">
+                            <p:ajax event="dateSelect" oncomplete="PF('demandaWV').filter()"/>
+                        </p:calendar>
+                    </f:facet>                      
+                    <h:outputText value="#{demanda.fecDemanda}">
+                        <f:convertDateTime pattern="dd-MMM-yyyy"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="#Proceso" filterBy="#{demanda.idProceso.idProceso}" filterMatchMode="exact" filterStyle="width:85%">
+                    <h:outputText value="#{demanda.idProceso.idProceso}"/>
+                </p:column>
+                <p:column headerText="Tipo Demanda" filterBy="#{demanda.idTipoDemanda.idTipoDemanda}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('demandaWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{aplicacionMB.listaTipoDemanda}" var="tipoDemanda" itemLabel="#{tipoDemanda.nomTipoDemanda}" itemValue="#{tipoDemanda.idTipoDemanda}"/>
+                        </p:selectOneMenu>
+                    </f:facet>                    
+                    <h:outputText value="#{demanda.idTipoDemanda eq null ? '' : demanda.idTipoDemanda.nomTipoDemanda}"/>
+                </p:column>
+                <p:column headerText="Abogado" filterBy="#{demanda.idUsuario.idUsuario}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('demandaWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS(AS)" itemValue="" />
+                            <f:selectItems value="#{informeMB.listaAbogados}" var="abogado" itemLabel="#{abogado.nombreCompleto()}" itemValue="#{abogado.idUsuario}"/>
+                        </p:selectOneMenu>
+                    </f:facet>                        
+                    <h:outputText value="#{demanda.idUsuario.nombreCompleto()}"/>
+                </p:column>
+                <p:column headerText="Juzgado" filterBy="#{demanda.idJuzgado.idJuzgado}" filterMatchMode="exact">
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('demandaWV').filter()" style="width: 80%">
+                            <f:selectItem itemLabel="TODOS" itemValue="" />
+                            <f:selectItems value="#{informeMB.listaJuzgado}" var="juzgado" itemLabel="#{juzgado.nomJuzgado}" itemValue="#{juzgado.idJuzgado}"/>
+                        </p:selectOneMenu>
+                    </f:facet>                            
+                    <h:outputText value="#{demanda.idJuzgado.nomJuzgado}"/>
+                </p:column>
+                <p:column headerText="Juez" filterBy="#{demanda.juez}" filterMatchMode="contains" filterStyle="85%">
+                    <h:outputText value="#{demanda.juez}"/>
+                </p:column>
+            </p:dataTable>          
+        </h:form>       
+    </ui:define>
+</ui:composition>

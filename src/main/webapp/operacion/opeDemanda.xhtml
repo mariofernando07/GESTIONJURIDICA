@@ -161,9 +161,11 @@
             <h:form id="IdFormModalDetalleDemanda">
                 <p:panelGrid class="panelGridSinBorder">
                     <p:row>
-                        <p:column class="columnLabel">Etapa Demanda</p:column>
+                        <p:column class="columnLabel">
+                            <p:outputLabel value="Etapa Demanda" class="labelFormularioObligatorio"/>
+                        </p:column>
                         <p:column>
-                            <p:selectOneMenu value="#{opeDemandaMB.idEtapaDemanda}">
+                            <p:selectOneMenu value="#{opeDemandaMB.idEtapaDemanda}" style="width: 150px">
                                 <f:selectItem itemLabel="..." itemValue="#{null}" noSelectionOption="true"/>
                                 <f:selectItems value="#{opeDemandaMB.listaEtapaDemanda}" var="etapaDemanda" itemLabel="#{etapaDemanda.nomEtapa}" itemValue="#{etapaDemanda.cfgEtapaDemandaPK.idEtapaDemanda}"/>
                             </p:selectOneMenu>
@@ -171,7 +173,7 @@
                     </p:row>
                     <p:row>
                         <p:column class="columnLabel">
-                            Fecha
+                            <p:outputLabel value="Fecha" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
                             <p:calendar value="#{opeDemandaMB.fechaDetalle}" navigator="true" locale="es" maxlength="10" timeZone="America/Bogota" pattern="dd/MM/yyyy" mask="99/99/9999"/>
@@ -179,10 +181,10 @@
                     </p:row>
                     <p:row>
                         <p:column class="columnLabel">
-                            Descripcion
+                            <p:outputLabel value="Descripcion" class="labelFormularioObligatorio"/>
                         </p:column>
                         <p:column>
-                            <p:inputTextarea value="#{opeDemandaMB.descripcionDetalle}" />
+                            <p:inputTextarea value="#{opeDemandaMB.descripcionDetalle}" style="width: 450px"/>
                         </p:column>
                     </p:row>                    
                 </p:panelGrid>

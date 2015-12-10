@@ -203,6 +203,11 @@ public class SegUsuario implements Serializable {
         this.idTipoDocumento = idTipoDocumento;
     }
 
+    public String nombreCompleto() {
+        String nombre = nombres + " " + apellidos;
+        return nombre;
+    }
+
     @XmlTransient
     public List<OpeDemanda> getOpeDemandaList() {
         return opeDemandaList;
@@ -219,7 +224,7 @@ public class SegUsuario implements Serializable {
     public void setSession(HttpSession session) {
         this.session = session;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
